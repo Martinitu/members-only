@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const UserSchema = require('./models/user');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 // Set up mongoose connection
@@ -36,6 +38,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.post("/sign-up", async (req, res, next) => {
+  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+  try {
+    const user = new UserSchema({
+      first_name : req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.username,
+      password: hashedPassword
+    });
+    const result = await user.save();
+    res.redirect("/");
+  } catch(err) {
+    return next(err);
+  };
+});
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
