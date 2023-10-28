@@ -1,10 +1,12 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const UserSchema = require('./models/user');
-const bcrypt = require('bcrypt');
+
 require('dotenv').config();
 
 // Set up mongoose connection
@@ -23,12 +25,18 @@ async function main() {
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const membreshipRouter = require('./routes/membership')
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,23 +46,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/membership', membreshipRouter);
 
-app.post("/sign-up", async (req, res, next) => {
-  bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-  try {
-    const user = new UserSchema({
-      first_name : req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.username,
-      password: hashedPassword
-    });
-    const result = await user.save();
-    res.redirect("/");
-  } catch(err) {
-    return next(err);
-  };
-});
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
