@@ -29,6 +29,9 @@ router.get("/passcode", user_controller.passcode_get);
 // POST request for passcode in  a user.
 router.post("/passcode", user_controller.passcode_post);
 
+// GET request for log out in  a user.
+router.get("/log-out", user_controller.logOut_get);
+
 /*
 /// AUTHOR ROUTES ///
 

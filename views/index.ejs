@@ -7,7 +7,23 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    <% if (user) {%>
+      <h1>WELCOME BACK <%= user.first_name %></h1>
+      <a href="/membership/log-out">LOG OUT</a>
+    <% } else { %>
+      <h1>please log in</h1>
+      <form action="/membership/sign-in" method="POST">
+        <label for="username">Mail</label>
+        <input name="username" placeholder="xxx@xxx.com" type="email" />
+        <label for="password">Password</label>
+        <input name="password" type="password" />
+        <button>Log In</button>
+      </form>
+    <%}%>
+ 
+
     <a href="/membership/sign-up">Sign Up</a>
-    <a href="/membership/sign-in">Sign In</a>
+   
   </body>
 </html>

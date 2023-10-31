@@ -3,7 +3,8 @@ const Message = require("../models/message");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require('bcrypt');
-const session = require('express-session');
+const passport = require("passport");
+
 
 
 exports.index = asyncHandler(async (req, res, next) => {
@@ -20,8 +21,7 @@ exports.index = asyncHandler(async (req, res, next) => {
   
     res.render("index", {
       title: "Members Only Home",
-      user_count: numUsers,
-      message_count: numMessgaes,
+      user: req.user 
 
     });
   });
@@ -39,20 +39,39 @@ exports.index = asyncHandler(async (req, res, next) => {
     // Validate and sanitize fields.
     body("first_name", "First Name must not be empty.")
     .trim()
-    .isLength({ min: 1 })
+    .isLength({ min: 2 })
     .escape(),
   body("last_name", "Last Name must not be empty.")
     .trim()
-    .isLength({ min: 1 })
+    .isLength({ min: 2 })
     .escape(),
-  body("email", "Email must not be empty.")
+  body("username", "Email must not be empty.")
     .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("password", "Password must not be empty").isLength({ min: 1 }).escape(),
-  body("membership_status.*").escape(),
+    .isLength({ min: 3 })
+    .escape()
+    .custom(async value => {
+    const user = await User.findOne({ email: value });
+    if (user) {
+      throw new Error('E-mail already in use');
+    }
+  }),
+  body("password", "Password must not be empty").isLength({ min: 4 }).escape(),
+  body('passwordConfirmation', "Password do not match").custom((value, { req }) => {
+    return value === req.body.password;
+  }),
 // Process request after validation and sanitization.
 asyncHandler( async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+        // Store the errors in the flash messages
+        errors.array().forEach((error) => {
+          req.flash('error', error.msg);
+        });
+        // Render the sign-up page again with the errors
+        return res.render('sign-up', { errors: req.flash('error') });
+      }
+
+
     bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
     try {
       const user = new User({
@@ -104,10 +123,19 @@ exports.sign_in_get = asyncHandler(async (req, res, next) => {
     });
   });
 
-  exports.sign_in_post = asyncHandler(async (req, res, next) => {
-    if(req.body.passcode === 'cats'){
-        await(User.findByIdAndUpdate(id, {membership_status: true}))
-    }
-  
-    res.redirect("/");
+  exports.sign_in_post =(
+    "/sign-in",
+    passport.authenticate("local", {
+      successRedirect: "/",
+      failureRedirect: "/"
+    })
+  );
+
+  exports.logOut_get = ("/log-out", (req, res, next) => {
+    req.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
   });

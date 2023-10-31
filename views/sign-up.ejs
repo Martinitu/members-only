@@ -12,10 +12,21 @@
     <label for="last_name">Last Name</label>
     <input name="last_name" placeholder="lastname" type="text" />
     <label for="username">Mail</label>
-    <input name="username" placeholder="username" type="mail" />
+    <input name="username" placeholder="username" type="email" />
     <label for="password">Password</label>
     <input name="password" type="password" />
+    <label for="passwordConfirmation">Confirm Password</label>
+    <input name="passwordConfirmation" type="password" />
     <button>Sign Up</button>
+
+   
   </form>
+  <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+    <div class="errors">
+      <% errors.forEach(function(error) { %>
+        <p><%= error %></p>
+      <% }); %>
+    </div>
+  <% } %>
 </body>
 </html>
