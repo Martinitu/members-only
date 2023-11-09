@@ -9,19 +9,17 @@ const passport = require("passport");
 
 exports.index = asyncHandler(async (req, res, next) => {
     // Get details of books, book instances, authors and genre counts (in parallel)
-    const [
-      numUsers,
-      numMessgaes,
-      
-    ] = await Promise.all([
-      User.countDocuments({}).exec(),
-      Message.countDocuments({}).exec(),
-
-    ]);
+    const allMessages = await (await Message.find({}, "user text timestamp").
+    sort({text: 1}).
+    populate("user").
+    populate("timestamp").
+    exec());
   
     res.render("index", {
       title: "Members Only Home",
-      user: req.user 
+      user: req.user,
+      errors: "",
+      messages_list: allMessages, 
 
     });
   });
@@ -78,7 +76,9 @@ asyncHandler( async (req, res, next) => {
         first_name : req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.username,
+        isAdmin: req.body.isAdmin,
         password: hashedPassword,
+        
       });
       req.session.user = user;
       res.redirect("/membership/passcode");

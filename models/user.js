@@ -6,7 +6,9 @@ const UserSchema = new Schema({
     first_name: { type: String, required: true, maxLength: 100 },
     last_name: { type: String, required: true, maxLength: 100 },
     email: { type: String, required: true },
+    isAdmin: {type: String, require: true},
     password: { type: String, required: true },
+    
    
 
   });
@@ -17,7 +19,7 @@ const UserSchema = new Schema({
     // We want to make sure we handle the exception by returning an empty string for that case
     let fullname = "";
     if (this.first_name && this.last_name) {
-      fullname = `${this.last_name}, ${this.first_name}`;
+      fullname = `${this.first_name}, ${this.last_name}`;
     }
   
     return fullname;

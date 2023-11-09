@@ -4,5 +4,103 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color:white;
+  margin: 10px;
+}
+
+ul {
+  margin-top: 10px;
+  list-style: none;
+  color: rgb(48, 39, 2);
+  background-color: burlywood;
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 400px;
+}
+
+
+
+form {
+ 
+ max-width: 500px;
+  padding: 10px;
+}
+
+button {
+  margin-top: 10px;
+  background-color: rgb(3, 70, 42);
+
+}
+
+.name {
+  background-color: rgb(247, 223, 192);
+  color: black;
+  margin-bottom: 10px;
+  max-width:320px;
+  border-radius: 5px;
+ 
+}
+
+.messageInput {
+  max-width: 100%;
+  height: 70px;
+  margin-top: 10px;
+  border-radius: 5px;
+
+}
+
+h2 {
+  color: antiquewhite;
+}
+.logIn {
+  background-color: rgb(8, 71, 8);
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+.messages {
+  max-width: 500px;
+  background-color: rgb(8, 71, 8);
+  padding: 15px 30px 15px 30px;
+
+  border-radius: 5px;
+  margin-top: 10px;
+
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+li {
+ padding: 10px;
+ 
+ max-width: 80%;
+}
+
+.postMessage {
+  max-width: 500px;
+  min-width: 450px;
+  background-color: rgb(8, 71, 8);
+  border-radius: 5px;
+  padding: 15px 30px 15px 30px;
+}
+
+.erase { 
+max-width: 80px;
+background-color: rgb(247, 223, 192);
+border-radius: 5px;
+border: none;
+color: rgb(8, 71, 8);
+padding: 3px 7px 3px 7px;
+}
+
+.form-group {
+  margin-top: 10px;
 }
